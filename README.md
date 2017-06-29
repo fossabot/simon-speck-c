@@ -104,3 +104,8 @@ scripts\speck\build_win.bat
 
 dll library is outputted to `libs/win` directory.
 
+## emscripten
+
+```
+./scripts/speck/build_emscripten.sh
+```
