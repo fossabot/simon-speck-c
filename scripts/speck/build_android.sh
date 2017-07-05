@@ -12,12 +12,6 @@ ARCHTECTURES=(
 #    "arm64-v8a"
 )
 
-STL_TYPES=(
-    "stlport"
-    "c++"
-    "gnustl"
-)
-
 NDK=
 if [ x$NDK_ROOT != x"" ]; then
     NDK=${NDK_ROOT}
@@ -31,18 +25,15 @@ fi
 pushd ${BASEDIR} > /dev/null
 for arch in ${ARCHTECTURES[@]}; do
     # build
-    for stl_type in ${STL_TYPES[@]}; do
-        /bin/rm -rf build
-        /bin/mkdir build
-        pushd build > /dev/null
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Android -DCMAKE_SYSTEM_VERSION=16 -DCMAKE_ANDROID_ARCH_ABI=${arch} -DCMAKE_ANDROID_NDK=${NDK} -DCMAKE_ANDROID_STL_TYPE=${stl_type}_static ..
-        make
-        # TODO: strip
-        popd > /dev/null
-        # deploy
-        /bin/mkdir -p libs/android/${arch}/${stl_type}
-        /bin/cp build/libspeck.so libs/android/${arch}/${stl_type}
-    done
-
+    /bin/rm -rf build
+    /bin/mkdir build
+    pushd build > /dev/null
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Android -DCMAKE_SYSTEM_VERSION=16 -DCMAKE_ANDROID_ARCH_ABI=${arch} -DCMAKE_ANDROID_NDK=${NDK} ..
+    make
+    # TODO: strip
+    popd > /dev/null
+    # deploy
+    /bin/mkdir -p libs/android/${arch}
+    /bin/cp build/libspeck.so libs/android/${arch}
 done
 popd > /dev/null
